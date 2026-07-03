@@ -1,5 +1,6 @@
 ﻿using BLL.DTOs;
 using BLL.Interfaces;
+using DAL.Entities;
 using DAL.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -42,18 +43,23 @@ namespace BLL.Services
             };
         }
 
-        private async Task<double> CalculateTodayKwhAsync(IEnumerable<DAL.Entities.Device> devices)
+        private async Task<double> CalculateTodayKwhAsync(IEnumerable<Device> devices)
         {
             var todayStart = DateTime.UtcNow.Date;
             var now = DateTime.UtcNow;
             double totalKwh = 0;
 
+            // Two bulk queries cover every device instead of two round trips per device.
+            var historySince = (await uow.DeviceStateHistories.GetAllSinceAsync(todayStart))
+                .GroupBy(h => h.DeviceId)
+                .ToDictionary(g => g.Key, g => g.OrderBy(h => h.ChangedAt).ToList());
+            var priorEntries = (await uow.DeviceStateHistories.GetLastEntriesBeforeAsync(todayStart))
+                .ToDictionary(h => h.DeviceId);
+
             foreach (var device in devices)
             {
-                var history = await uow.DeviceStateHistories.GetForDeviceSinceAsync(device.Id, todayStart);
-
-                var priorEntry = await uow.DeviceStateHistories.GetLastEntryBeforeAsync(device.Id, todayStart);
-                var wasOn = priorEntry?.IsOn ?? false;
+                var history = historySince.TryGetValue(device.Id, out var h) ? h : new List<DeviceStateHistory>();
+                var wasOn = priorEntries.TryGetValue(device.Id, out var priorEntry) && priorEntry.IsOn;
                 var segmentStart = todayStart;
 
                 foreach (var entry in history)

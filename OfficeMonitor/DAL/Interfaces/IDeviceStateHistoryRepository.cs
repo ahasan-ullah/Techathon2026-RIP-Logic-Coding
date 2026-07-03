@@ -12,6 +12,7 @@ namespace DAL.Interfaces
         Task<IReadOnlyList<DeviceStateHistory>> GetForDeviceSinceAsync(int deviceId, DateTime since);
         Task<DeviceStateHistory?> GetLastEntryBeforeAsync(int deviceId, DateTime beforeUtc);
         Task<IReadOnlyList<DeviceStateHistory>> GetAllSinceAsync(DateTime since);
+        Task<IReadOnlyList<DeviceStateHistory>> GetLastEntriesBeforeAsync(DateTime beforeUtc);
     }
 
 }

@@ -17,6 +17,8 @@ namespace DAL.Repositories
 
         public async Task<IReadOnlyList<Alert>> GetActiveAsync() =>
             await DbSet.AsNoTracking()
+                .Include(a => a.Room)
+                .Include(a => a.Device)
                 .Where(a => a.ResolvedAt == null)
                 .OrderByDescending(a => a.TriggeredAt)
                 .ToListAsync();

@@ -3,6 +3,7 @@ using BLL.Interfaces;
 using DAL.Entities;
 using DAL.Enums;
 using DAL.Interfaces;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,13 +15,28 @@ namespace BLL.Services
     public class AlertService : IAlertService
     {
         private readonly IUnitOfWork uow;
+        private readonly TimeZoneInfo officeTimeZone;
         private static readonly TimeSpan OfficeStart = TimeSpan.FromHours(9);
         private static readonly TimeSpan OfficeEnd = TimeSpan.FromHours(17);
         private static readonly TimeSpan ContinuousThreshold = TimeSpan.FromHours(2);
 
-        public AlertService(IUnitOfWork uow)
+        public AlertService(IUnitOfWork uow, IConfiguration configuration)
         {
             this.uow = uow;
+            officeTimeZone = ResolveTimeZone(configuration["OfficeSettings:TimeZoneId"]);
+        }
+
+        private static TimeZoneInfo ResolveTimeZone(string? timeZoneId)
+        {
+            if (string.IsNullOrWhiteSpace(timeZoneId)) return TimeZoneInfo.Local;
+            try
+            {
+                return TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
+            }
+            catch (TimeZoneNotFoundException)
+            {
+                return TimeZoneInfo.Local;
+            }
         }
 
         public async Task<List<AlertDto>> GetActiveAlertsAsync()
@@ -40,7 +56,7 @@ namespace BLL.Services
         public async Task EvaluateAlertsAsync()
         {
             var now = DateTime.UtcNow;
-            var localTime = now.TimeOfDay;
+            var localTime = TimeZoneInfo.ConvertTimeFromUtc(now, officeTimeZone).TimeOfDay;
             var devices = await uow.Devices.GetAllWithStateAsync();
 
             bool isAfterHours = localTime < OfficeStart || localTime > OfficeEnd;
@@ -64,10 +80,10 @@ namespace BLL.Services
             foreach (var group in rooms)
             {
                 var allOn = group.All(d => d.DeviceState?.IsOn == true);
-                if (!allOn) continue;
-
                 var earliestOnSince = group.Max(d => d.DeviceState!.LastChangedAt);
-                if (now - earliestOnSince >= ContinuousThreshold)
+                var continuouslyOn = allOn && now - earliestOnSince >= ContinuousThreshold;
+
+                if (continuouslyOn)
                 {
                     var roomName = group.First().Room.Name;
                     await RaiseIfNotActiveAsync(
@@ -75,6 +91,10 @@ namespace BLL.Services
                         deviceId: null,
                         roomId: group.Key,
                         message: $"{roomName} has had all devices ON continuously for over 2 hours.");
+                }
+                else
+                {
+                    await ResolveByRoomAndTypeAsync(group.Key, AlertType.ContinuousUsage);
                 }
             }
 
@@ -107,6 +127,15 @@ namespace BLL.Services
                 alert.ResolvedAt = DateTime.UtcNow;
                 uow.Alerts.Update(alert);
             }
+        }
+
+        private async Task ResolveByRoomAndTypeAsync(int roomId, AlertType type)
+        {
+            var alert = await uow.Alerts.GetActiveByRoomAndTypeAsync(roomId, type);
+            if (alert is null) return;
+
+            alert.ResolvedAt = DateTime.UtcNow;
+            uow.Alerts.Update(alert);
         }
     }
 }

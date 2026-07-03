@@ -31,5 +31,12 @@ namespace DAL.Repositories
                 .Where(h => h.ChangedAt >= since)
                 .OrderBy(h => h.ChangedAt)
                 .ToListAsync();
+
+        public async Task<IReadOnlyList<DeviceStateHistory>> GetLastEntriesBeforeAsync(DateTime beforeUtc) =>
+            await DbSet.AsNoTracking()
+                .Where(h => h.ChangedAt < beforeUtc)
+                .GroupBy(h => h.DeviceId)
+                .Select(g => g.OrderByDescending(h => h.ChangedAt).First())
+                .ToListAsync();
     }
 }

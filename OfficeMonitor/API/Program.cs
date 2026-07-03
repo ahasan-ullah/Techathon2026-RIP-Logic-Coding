@@ -4,6 +4,7 @@ using DAL.Data;
 using DAL.Interfaces;
 using DAL.Repositories;
 using Microsoft.EntityFrameworkCore;
+using OfficeMonitor.API.BackgroundServices;
 using OfficeMonitor.API.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -29,6 +30,9 @@ builder.Services.AddScoped<IAlertService, AlertService>();
 
 //apis
 builder.Services.AddSignalR();
+
+//background simulator: periodically flips devices, evaluates alerts, and pushes updates over SignalR
+builder.Services.AddHostedService<DeviceSimulatorHostedService>();
 
 var app = builder.Build();
 

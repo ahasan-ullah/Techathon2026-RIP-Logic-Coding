@@ -2,6 +2,8 @@
 using BLL.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using OfficeMonitor.API.Hubs;
 
 namespace API.Controllers
 {
@@ -9,10 +11,13 @@ namespace API.Controllers
     [ApiController]
     public class AlertsController : ControllerBase
     {
-        public readonly IAlertService alertService;
-        public AlertsController(IAlertService alertService)
+        private readonly IAlertService alertService;
+        private readonly IHubContext<DeviceHub> hubContext;
+
+        public AlertsController(IAlertService alertService, IHubContext<DeviceHub> hubContext)
         {
             this.alertService = alertService;
+            this.hubContext = hubContext;
         }
 
         [HttpGet("active")]
@@ -21,5 +26,14 @@ namespace API.Controllers
             var alerts = await alertService.GetActiveAlertsAsync();
             return Ok(alerts);
         }
-}
+
+        [HttpPost("evaluate")]
+        public async Task<ActionResult<List<AlertDto>>> Evaluate()
+        {
+            await alertService.EvaluateAlertsAsync();
+            var alerts = await alertService.GetActiveAlertsAsync();
+            await hubContext.Clients.All.SendAsync("AlertsUpdated", alerts);
+            return Ok(alerts);
+        }
+    }
 }

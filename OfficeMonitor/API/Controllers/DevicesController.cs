@@ -32,7 +32,6 @@ public class DevicesController : ControllerBase
         {
             var updated = await deviceService.ToggleDeviceAsync(id, request.IsOn);
 
-            
             await hubContext.Clients.All.SendAsync("DeviceStateChanged", updated);
 
             return Ok(updated);
@@ -40,6 +39,10 @@ public class DevicesController : ControllerBase
         catch (KeyNotFoundException ex)
         {
             return NotFound(ex.Message);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(ex.Message);
         }
     }
 }

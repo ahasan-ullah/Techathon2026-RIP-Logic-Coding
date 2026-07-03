@@ -17,6 +17,7 @@ namespace DAL.Repositories
         public async Task<Device?> GetByIdWithStateAsync(int id) =>
             await DbSet.AsNoTracking()
                 .Include(d => d.DeviceState)
+                .Include(d => d.Room)
                 .FirstOrDefaultAsync(d => d.Id == id);
 
         public async Task<IReadOnlyList<Device>> GetAllWithStateAsync() =>
@@ -29,6 +30,7 @@ namespace DAL.Repositories
             await DbSet.AsNoTracking()
                 .Where(d => d.RoomId == roomId)
                 .Include(d => d.DeviceState)
+                .Include(d => d.Room)
                 .ToListAsync();
     }
 }
