@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace DAL.Enums
 {
-    public enum RoomType
+    public enum AlertType
     {
-        WaitingArea = 1,
-        WorkArea = 2,
+        AfterHours = 1,
+        ContinuousUsage = 2,
     }
 }
