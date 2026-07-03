@@ -19,5 +19,4 @@ namespace BLL.DTOs
         public string RoomName { get; set; } = string.Empty;
         public int CurrentWatts { get; set; }
     }
-    }
 }
