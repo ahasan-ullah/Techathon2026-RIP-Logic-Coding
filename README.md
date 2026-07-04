@@ -183,8 +183,8 @@ With all three running, this should hold true:
 | Real-time SignalR updates | ✅ Done |
 | Web dashboard | ✅ Done |
 | Discord bot (`!status`, `!room <name>`, `!usage`, proactive alerts) | ✅ Done |
-| System diagram | ✅ Done — [docs/system-diagram.png](Assets\System Diagram\system archi.png) |
-| Hardware/circuit schematic (Wokwi/Tinkercad) | ✅ Done — [docs/circuit-schematic.png](Assets\Schematice Diagram\schematic diagram.png) |
+| System diagram | ✅ Done — [Assets/System Diagram/system archi.png](Assets/System%20Diagram/system%20archi.png) |
+| Hardware/circuit schematic (Wokwi/Tinkercad) | ✅ Done — [Assets/Schematice Diagram/schematic diagram.png](Assets/Schematice%20Diagram/schematic%20diagram.png) |
 
 ---
 
