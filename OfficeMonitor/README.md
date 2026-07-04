@@ -268,6 +268,6 @@ This is the entire "dummy data" story — no separate script or JSON file needed
 
 ## Roadmap
 
-- [ ] Web dashboard (live device panel, power meter, alerts panel, office floor plan)
-- [ ] Discord bot (`!status`, `!room <name>`, `!usage`, proactive alert posts)
-- [ ] System diagram + hardware/circuit schematic
+- [x] Web dashboard (live device panel, power meter, alerts panel, office floor plan) — see [`OfficeMonitor Client`](../OfficeMonitor%20Client/README.md)
+- [x] Discord bot (`!status`, `!room <name>`, `!usage`, proactive alert posts) — see [`Bot/README.md`](Bot/README.md)
+- [x] System diagram + hardware/circuit schematic — see [root README](../README.md#diagrams)
