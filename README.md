@@ -185,7 +185,6 @@ With all three running, this should hold true:
 | Discord bot (`!status`, `!room <name>`, `!usage`, proactive alerts) | ✅ Done |
 | System diagram | ✅ Done — [docs/system-diagram.png](docs/system-diagram.png) |
 | Hardware/circuit schematic (Wokwi/Tinkercad) | ✅ Done — [docs/circuit-schematic.png](docs/circuit-schematic.png) |
-| Video demo | ❌ Not started |
 
 ---
 
