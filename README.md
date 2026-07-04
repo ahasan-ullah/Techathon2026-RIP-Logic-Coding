@@ -184,7 +184,7 @@ With all three running, this should hold true:
 | Web dashboard | ✅ Done |
 | Discord bot (`!status`, `!room <name>`, `!usage`, proactive alerts) | ✅ Done |
 | System diagram | ✅ Done — [docs/system-diagram.png](Assets\System Diagram\system archi.png) |
-| Hardware/circuit schematic (Wokwi/Tinkercad) | ✅ Done — [docs/circuit-schematic.png](D:\Workspace\Projects\hackathon\Assets\Schematice Diagram\schematic diagram.png) |
+| Hardware/circuit schematic (Wokwi/Tinkercad) | ✅ Done — [docs/circuit-schematic.png](Assets\Schematice Diagram\schematic diagram.png) |
 
 ---
 
