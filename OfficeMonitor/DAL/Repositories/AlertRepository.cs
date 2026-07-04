@@ -23,6 +23,9 @@ namespace DAL.Repositories
                 .OrderByDescending(a => a.TriggeredAt)
                 .ToListAsync();
 
+        public async Task<IReadOnlyList<Alert>> GetActiveByTypeAsync(AlertType type) =>
+            await DbSet.Where(a => a.Type == type && a.ResolvedAt == null).ToListAsync();
+
         public async Task<Alert?> GetActiveByDeviceAndTypeAsync(int deviceId, AlertType type) =>
             await DbSet.FirstOrDefaultAsync(a =>
                 a.DeviceId == deviceId && a.Type == type && a.ResolvedAt == null);

@@ -121,8 +121,8 @@ namespace BLL.Services
 
         private async Task ResolveByTypeAsync(AlertType type)
         {
-            var active = await uow.Alerts.GetActiveAsync();
-            foreach (var alert in active.Where(a => a.Type == type))
+            var active = await uow.Alerts.GetActiveByTypeAsync(type);
+            foreach (var alert in active)
             {
                 alert.ResolvedAt = DateTime.UtcNow;
                 uow.Alerts.Update(alert);

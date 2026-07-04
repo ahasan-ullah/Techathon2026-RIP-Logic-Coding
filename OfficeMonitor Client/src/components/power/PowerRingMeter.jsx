@@ -10,11 +10,11 @@ export default function PowerRingMeter({ totalWatts, maxWatts, todayKwh, onCount
         <svg viewBox="0 0 120 120" className="h-full w-full -rotate-90">
           <defs>
             <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#f2a93b" />
-              <stop offset="100%" stopColor="#57c7b8" />
+              <stop offset="0%" stopColor="#4d7fff" />
+              <stop offset="100%" stopColor="#22d3ee" />
             </linearGradient>
           </defs>
-          <circle cx="60" cy="60" r={radius} fill="none" stroke="#2a303b" strokeWidth="10" />
+          <circle cx="60" cy="60" r={radius} fill="none" stroke="#1c253f" strokeWidth="10" />
           <circle
             cx="60" cy="60" r={radius} fill="none"
             stroke="url(#ringGrad)" strokeWidth="10" strokeLinecap="round"

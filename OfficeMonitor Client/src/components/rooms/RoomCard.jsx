@@ -26,7 +26,7 @@ export default function RoomCard({ room, onToggleDevice }) {
                   ? (d.type === 'Fan' ? 'btn-secondary btn-soft' : 'btn-primary btn-soft')
                   : 'btn-ghost border border-neutral bg-base-300 text-base-content/70'}`}
             >
-              <span className={`h-1.5 w-1.5 rounded-full ${d.isOn ? (d.type === 'Fan' ? 'bg-secondary' : 'bg-primary') : 'bg-[#4a5160]'}`} />
+              <span className={`h-1.5 w-1.5 ${d.isOn ? (d.type === 'Fan' ? 'bg-secondary' : 'bg-primary') : 'bg-[#3a4568]'}`} />
               {d.name}
             </button>
           ))}
